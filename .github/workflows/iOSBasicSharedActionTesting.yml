@@ -1,0 +1,25 @@
+name: iOS Test Build
+
+on:
+  workflow_call:
+    inputs:
+      targetName:
+        required: true
+        type: string
+      workspaceName:
+        required: true
+        type: string
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: |
+        echo "Env: \"${{ inputs.targetName }}\""
+        echo "Env: ${{ inputs.workspaceName }}"
+    - name: Test
+       uses: mohanraajsk/POC_Shared_Actions/.github/workflows/iOSBasicSharedActionTesting.yml@main
+        with:
+            targetName: POC_GithuAction
+            workspaceName: POC_GithuAction.xcworkspace
+      

@@ -1,0 +1,237 @@
+default_platform(:ios)
+
+before_all do
+	sh 'mkdir ../build || true'
+end
+
+# iOS build - Fill below configuration input as per need.
+# For more information on builkd settings , see:
+# https://docs.fastlane.tools/actions/build_app/#build_app
+
+app_name = ENV["APP_NAME"]
+scheme = ENV["APP_SCHEME"]
+project = ENV["APP_PROJECT"]
+target = ENV["APP_TARGET"]
+
+# The configuration to use when building the app. Defaults to 'Release'
+build_config = ENV["APP_BUILD_CONFIG"]
+
+# Method used to export the archive. 
+# Valid values are: app-store, ad-hoc, package, enterprise, development, developer-id
+export_method = ENV["APP_EXPORT_METHOD"]
+
+# Code signing identities
+codesign_certificate = ENV["CODESIGN_CERTIFICATE"]
+
+# Output build name
+output_build_name = ""
+
+# Lane to run unit test cases 
+lane :tests do
+        # Generate code coverage report
+        test_args = {
+          scheme: ENV["APP_TEST_SCHEME"],
+          clean: true,
+          device: ENV["APP_TEST_DEVICE"],
+          code_coverage: true,
+          fail_build: true,
+          output_types: "html,junit",
+          output_directory: "build",
+          output_style: "basic",
+          buildlog_path: "build",
+          derived_data_path: "build",
+        }
+
+        if ENV["APP_WORKSPACE"]
+          test_args[:workspace] = ENV["APP_WORKSPACE"]
+        else
+          test_args[:project] = ENV["APP_PROJECT"]
+        end
+
+      scan(test_args)
+end
+
+platform :ios do
+    desc "This lane generated the build"
+    lane :build do |options|
+      scheme = options.fetch(:scheme) if options[:scheme]
+      build_env = options.fetch(:build_env) if options[:build_env]
+      export_method = options.fetch(:export_method) if options[:export_method]
+      build_number = options.fetch(:build_number) if options[:build_number]
+      version_number = options.fetch(:version_number) if options[:version_number]
+      # increment_build_and_version_number(scheme: scheme, build_number: build_number, version_number: version_number)
+      generate_build(APP_SCHEME: scheme,APP_BUILD_CONFIG: build_env,APP_EXPORT_METHOD: export_method)
+    end
+
+    # Lane to create build name using the version
+    lane :increment_build_and_version_number do |options|
+
+      #  increment build number
+      increment_build_number(xcodeproj: project,build_number: options[:build_number])
+
+      #  increment version number
+      increment_version_number(
+        version_number: options[:version_number],
+        xcodeproj: project,
+      )
+    end
+
+    # Lane to create build name using the version
+    lane :generate_build_name do |options|
+      version = get_version_number(target: ENV["APP_TARGET"])
+      build_number = get_build_number(xcodeproj: ENV["APP_PROJECT"])
+      puts build_number
+        puts "VERSION : #{version}"
+        current_date = Time.new.strftime('%Y.%m.%d')
+      build_name = "-Ver-"+ version + "-B-" + build_number + "-" +current_date
+      puts "build_name: #{build_name}"
+      puts "app_name"
+        output_build_name = app_name
+        # Build name
+        puts "#{app_name} BUILD NAME : #{output_build_name}"
+    end
+
+    lane :build_xcarchive do |options|
+      scheme = options.fetch(:scheme) if options[:scheme]
+      build_number = options.fetch(:build_number) if options[:build_number]
+      version_number = options.fetch(:version_number) if options[:version_number]
+      export_method = options.fetch(:export_method) if options[:export_method]
+      xcodebuild(
+        archive: true,
+        archive_path: "./build/#{scheme}.xcarchive",
+        scheme: scheme,
+        export_method: export_method,
+        configuration: ENV["APP_BUILD_CONFIG"],
+        workspace: ENV["APP_WORKSPACE"],
+        xcargs: "ENABLE_BITCODE=NO"
+      )
+    end
+
+
+    desc "This lane will build application with the provided configuration"
+    lane :generate_build do |options|
+      p options
+
+      workspace = ENV["APP_WORKSPACE"]
+      puts "WORKSPACE: #{ENV['APP_WORKSPACE']}"
+
+        args = {
+                scheme: options[:APP_SCHEME], 
+                workspace: ENV["APP_WORKSPACE"],
+                clean: ENV["APP_CLEAN_BUILD"],
+                export_method: options[:APP_EXPORT_METHOD],
+                configuration: ENV["APP_BUILD_CONFIG"],  
+                include_bitcode: false,
+                export_options: ({
+                    compileBitcode: false,
+                    iCloudContainerEnvironment: "Development"
+                }),
+                xcargs: "ENABLE_BITCODE=NO",
+                output_directory: "build",
+                output_name: ENV["APP_NAME"]
+        }
+        clear_derived_data
+        gym(args)
+    end
+
+    lane :versionbump do | options |
+      scheme = options.fetch(:scheme) if options[:scheme]
+      branch_name = options.fetch(:branch) if options[:branch]
+      input_build = options.fetch(:build_number) if options[:build_number]
+      input_version = options.fetch(:version_number) if options[:version_number]
+      build_number = get_build_number
+      puts "build no. #{build_number}"
+
+      # # get version number
+      new_version = get_version_number(target: ENV["APP_TARGET"])
+      commitVersion = "#{input_version}-rc#{input_build}-#{scheme}"
+      set_info_plist_value(path: "#{ENV["APP_NAME"]}/Info_US.plist", key: "CFBundleVersion", value: build_number)
+	    
+      reset_git_repo(
+      force: true,
+        files: [
+          "./fastlane/README.md"
+        ]
+      )
+
+      clean_build_artifacts
+
+      # commit_version_bump(
+      #   xcodeproj: ENV["APP_PROJECT"],
+      #   message: "[ver++] v#{new_version} (#{build_number})",
+      # )
+      tag = "r#{commitVersion}"
+      add_git_tag(
+        tag: tag
+      )
+
+      push_git_tags(tag: tag)
+
+      # push_to_git_remote( 
+      #   remote: "origin",
+      #   remote_branch: branch_name, 
+      #   force: true
+      # )
+    end
+
+    lane :lint do
+      swiftlint(
+        mode: :lint,                                    # SwiftLint mode: :lint (default) or :autocorrect
+        executable: "./Pods/SwiftLint/swiftlint",       # The SwiftLint binary path (optional). Important if you've installed it via CocoaPods
+        output_file: "./build/swiftlint.result.json",   # The path of the output file (optional)
+        reporter: "json",                         # The custom reporter to use (optional)
+        config_file: "./.swiftlint.yml",               # The path of the configuration file (optional)
+        #ignore_exit_status: true,                     # Allow fastlane to continue even if SwiftLint returns a non-zero exit status (Default: false)
+        strict: true
+	  )
+    end
+
+    lane :analysis do
+       slather(
+         cobertura_xml: true, 
+         jenkins: true, 
+         verbose: true,
+         scheme: ENV["APP_SCHEME"],
+         proj:  ENV["APP_PROJECT"],
+         build_directory: "build", 
+         output_directory: "build", 
+         workspace: ENV["APP_WORKSPACE"]
+       )
+    end
+
+    # desc "This lane will upload build to the respective distribution opted for"
+    # lane :upload do |options|
+  
+    #   generate_build_name
+  
+    #   # Fetch changelog from Git repo
+    #   changelog = changelog_from_git_commits(
+    #                         commits_count: ENV["NO_OF_COMMITS"],
+    #                         pretty: "- (%ae) %s",
+    #                         date_format: "short",
+    #                         match_lightweight_tag: false, 
+    #                         merge_commit_filtering: "exclude_merges")
+  
+    #   # puts "APP DISTRIBUTION : #{distribution}"
+  
+    #   # Select upload option as per user selection
+    #   case ENV["APP_DISTRIBUTION"]
+    #   when 'testfairy' 
+    #       # Push build on to TestFairy 
+    #       testfairy(api_key: ENV["DISTRIBUTION_API_TOKEN"],
+    #                   ipa: "./#{ENV['APP_WORKSPACE']}/*.ipa",
+    #                   # symbols_file: '**/ENV['APP_WORKSPACE']/*.app.dSYM.zip',
+    #                   comment: changelog,
+    #                   testers_groups: ENV["GROUPS"],
+    #                   notify: "on"
+    #                   )
+    #     else
+    #       # No channel opted for notifing build release
+    #       puts "No distribution opted to upload app"
+    #     end
+  
+    #   # Publish to the channel
+    #   # publish(build_name: output_build_name, version_num: get_version_number(target: ENV["APP_TARGET"]))
+  
+    # end
+end

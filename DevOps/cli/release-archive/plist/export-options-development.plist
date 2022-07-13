@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>provisioningProfiles</key>
+        <dict>
+            <key>com.deloitte.LillyPlus</key>
+            <string>Lilly Together Development Profile</string>
+            <key>com.deloitte.LillyPlus.LillyPlusNotificationExtension</key>
+            <string>LillyPlusNotificationServiceExtension</string>
+            <key>com.lilly.qa.lillytogether</key>
+            <string>LLYAPPSTORE LillyTogether</string>
+            <key>com.lilly.qa.lillytogether.LillyTogetherNotificationExtension</key>
+            <string>LLYAPPSTORE LillyTogether Notification</string>
+            <key>com.lilly.alpha.lillytogether</key>
+            <string>LLYAPPSTORE LillyTogetherAlpha</string>
+            <key>com.lilly.alpha.lillytogether.LillyTogetherNotificationExtension</key>
+            <string>LLYAPPSTORE LillyTogetherAlpha Notification</string>
+            <key>com.lilly.study.lillytogether</key>
+            <string>LLYDEV LillyTogetherAlphaStudy</string>
+            <key>com.lilly.lillytogether</key>
+            <string>LLYAPPSTORE LillyTogetherPROD</string>
+        </dict>
+        <key>method</key>
+        <string>app-store</string>
+        <key>iCloudContainerEnvironment</key>
+        <string>Production</string>
+        <key>compileBitcode</key>
+        <false />
+    </dict>
+</plist>

@@ -1,0 +1,5 @@
+#!/bin/bash
+git checkout 98408ab80bd8e3de9973ca12ef534488f8678c3b VirtualClaudia/Pods/Charts/Source/Charts/Data/Implementations/ChartBaseDataSet.swift 
+git checkout 98408ab80bd8e3de9973ca12ef534488f8678c3b VirtualClaudia/Pods/Charts/Source/Charts/Data/Interfaces/IChartDataSet.swift 
+git checkout 98408ab80bd8e3de9973ca12ef534488f8678c3b VirtualClaudia/Pods/Charts/Source/Charts/Renderers/BarChartRenderer.swift 
+git checkout 98408ab80bd8e3de9973ca12ef534488f8678c3b VirtualClaudia/Pods/Charts/Source/Charts/Renderers/BarLineScatterCandleBubbleRenderer.swift 

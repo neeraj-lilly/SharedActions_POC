@@ -1,0 +1,79 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "CwlCatchException",
+        "repositoryURL": "https://github.com/mattgallagher/CwlCatchException.git",
+        "state": {
+          "branch": null,
+          "revision": "35f9e770f54ce62dd8526470f14c6e137cef3eea",
+          "version": "2.1.1"
+        }
+      },
+      {
+        "package": "CwlPreconditionTesting",
+        "repositoryURL": "https://github.com/mattgallagher/CwlPreconditionTesting.git",
+        "state": {
+          "branch": null,
+          "revision": "fb7a26374e8570ff5c68142e5c83406d6abae0d8",
+          "version": "2.0.2"
+        }
+      },
+      {
+        "package": "LillyUtilityCLI",
+        "repositoryURL": "git@github.com:EliLillyCo/DIGH_LIFC_Utility.git",
+        "state": {
+          "branch": null,
+          "revision": "3ccc7b1e900e81d94a3e4fc7934265b94c0fb326",
+          "version": null
+        }
+      },
+      {
+        "package": "MarkdownGenerator",
+        "repositoryURL": "https://github.com/eneko/MarkdownGenerator.git",
+        "state": {
+          "branch": null,
+          "revision": "5575590ed9ea5cb02cd54a890cb43174efde7911",
+          "version": "1.1.0"
+        }
+      },
+      {
+        "package": "Nimble",
+        "repositoryURL": "https://github.com/Quick/Nimble.git",
+        "state": {
+          "branch": null,
+          "revision": "7a54aaf19a8ef16f67787c260fda81ead7ba4d67",
+          "version": "9.0.1"
+        }
+      },
+      {
+        "package": "Quick",
+        "repositoryURL": "https://github.com/Quick/Quick.git",
+        "state": {
+          "branch": null,
+          "revision": "71c90eda2ab14b2110b22222d4b373163126561c",
+          "version": "3.0.1"
+        }
+      },
+      {
+        "package": "swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser",
+        "state": {
+          "branch": null,
+          "revision": "9564d61b08a5335ae0a36f789a7d71493eacadfc",
+          "version": "0.3.2"
+        }
+      },
+      {
+        "package": "SWXMLHash",
+        "repositoryURL": "https://github.com/drmohundro/SWXMLHash.git",
+        "state": {
+          "branch": null,
+          "revision": "6469881a3f30417c5bb02404ea4b69207f297592",
+          "version": "6.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
