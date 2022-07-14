@@ -21,8 +21,8 @@ jobs:
     - name: List of simulator
       run: xcrun simctl list
 
-#    - name: Open simulator
-#      run: open -a Simulator --args -CurrentDevice UDID E7358E62-ECF9-436A-834F-CFB7C2801FD9
+    - name: Open simulator
+      run: open -a Simulator --args -CurrentDevice UDID F34F4E37-347B-477C-B62A-EB7C3E26A891
 
     - name: Select Xcode
       run: sudo xcode-select -switch /Applications/Xcode.app
@@ -50,8 +50,7 @@ jobs:
       shell: bash
 
     - name: Clean and Build
-      run: xcodebuild -workspace ${{inputs.workspaceName}} -scheme "${{ inputs.targetName }}" build
-#      run: xcodebuild clean build -workspace ${{inputs.workspaceName}} -scheme "${{ inputs.targetName }}" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 11" ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
+      run: xcodebuild clean build -workspace ${{inputs.workspaceName}} -scheme "${{ inputs.targetName }}" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 13 Pro" ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
       
-#    - name: Test
-#      run: xcodebuild test -workspace ${{inputs.workspaceName}} -scheme "${{ inputs.targetName }}" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 11" ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
+    - name: Test
+      run: xcodebuild test -workspace ${{inputs.workspaceName}} -scheme "${{ inputs.targetName }}" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 13 Pro" ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
