@@ -44,6 +44,8 @@ jobs:
         key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
         restore-keys: |
                 ${{ runner.os }}-pods-
+     
+    - name: Pod Install
       run: pod install
       shell: bash
 
