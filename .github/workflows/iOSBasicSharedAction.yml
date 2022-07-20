@@ -12,6 +12,7 @@ on:
 jobs:
   build-and-test:
     runs-on: macos-latest
+    timeout-minutes: 25
     steps:
     - uses: actions/checkout@v2
     - run: |
@@ -22,7 +23,7 @@ jobs:
       run: xcrun simctl list
 
     - name: Open simulator
-      run: open -a Simulator --args -CurrentDevice UDID D79E4D6C-ECF1-45C4-81D2-7386E3170E90
+      run: open -a Simulator --args -CurrentDevice UDID F34F4E37-347B-477C-B62A-EB7C3E26A891
 
     - name: Select Xcode
       run: sudo xcode-select -switch /Applications/Xcode.app
@@ -32,10 +33,10 @@ jobs:
 #      shell: bash
 #
 #    - name: Clean and Build
-#      run: xcodebuild clean build test -workspace ${{inputs.workspaceName}} -scheme "${{ inputs.targetName }}" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 11" ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
+#      run: xcodebuild clean build test -workspace ${{inputs.workspaceName}} -scheme "${{ inputs.targetName }}" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone-13-Pro" ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
 #
 #    - name: Test
-#      run: xcodebuild test -workspace ${{inputs.workspaceName}} -scheme "${{ inputs.targetName }}" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 11" ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
+#      run: xcodebuild test -workspace ${{inputs.workspaceName}} -scheme "${{ inputs.targetName }}" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone-13-Pro" ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
       
     - name: Install Dependencies
       uses: actions/cache@v2
